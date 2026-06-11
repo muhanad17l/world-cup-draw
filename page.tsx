@@ -113,7 +113,7 @@ export default function Home() {
       {/* ─── SCENIC BACKGROUND ─── */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url('/shemagh_pattern.png')`, backgroundSize: '120px' }} />
-        <div className="absolute top-1/3 left-0 w-[80vw] h-[80vw] bg-amber-500/5 blur-[250px] rounded-full translate-x-[40%]" />
+        <div className="absolute top-1/3 left-0 w-[80vw] h-[80vw] bg-amber-500/5 blur-[250px] rounded-full translate-x-[-40%]" />
         <div className="absolute bottom-1/3 right-0 w-[80vw] h-[80vw] bg-red-600/5 blur-[250px] rounded-full translate-x-[40%]" />
       </div>
 
@@ -273,9 +273,9 @@ function MatchNode({ id, label, side, onClick, matches, variant = "default" }: a
          <span className="text-[11px] font-black uppercase text-white tracking-[12px] italic">{label}</span>
       </div>
       {[1, 2].map(num => {
-        const name = match[`player${num}Name`];
-        const score = match[`player${num}Score`];
-        const flag = match[`player${num}Flag`];
+        const name = match[`player${num}Name` as keyof Match];
+        const score = match[`player${num}Score` as keyof Match];
+        const flag = match[`player${num}Flag` as keyof Match];
         const win = getIsWinner(num);
         const isEmpty = !name;
         return (
