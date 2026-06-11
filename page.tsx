@@ -113,7 +113,7 @@ export default function Home() {
       {/* ─── SCENIC BACKGROUND ─── */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url('/shemagh_pattern.png')`, backgroundSize: '120px' }} />
-        <div className="absolute top-1/3 left-0 w-[80vw] h-[80vw] bg-amber-500/5 blur-[250px] rounded-full translate-x-[-40%]" />
+        <div className="absolute top-1/3 left-0 w-[80vw] h-[80vw] bg-amber-500/5 blur-[250px] rounded-full translate-x-[40%]" />
         <div className="absolute bottom-1/3 right-0 w-[80vw] h-[80vw] bg-red-600/5 blur-[250px] rounded-full translate-x-[40%]" />
       </div>
 
