@@ -23,7 +23,6 @@ interface Match {
   player1Score: number;
   player2Score: number;
   status: string;
-  [key: string]: any; // تتيح لـ TypeScript قراءة الخصائص بشكل ديناميكي بأمان
 }
 
 export default function Home() {
@@ -42,11 +41,9 @@ export default function Home() {
       const width = typeof window !== 'undefined' ? window.innerWidth : 1920;
       const height = typeof window !== 'undefined' ? window.innerHeight : 1080;
       
-      // Increased baseWidth to 1850 to match the spaciousness of Image 2
       const baseWidth = 1900; 
       const calculatedScale = Math.min(1, width / baseWidth);
       
-      // Multiplier set to 0.86 for that premium wide-angle aesthetic
       setScale(calculatedScale * 0.86); 
 
       const isMobile = width < 1024;
@@ -198,30 +195,39 @@ export default function Home() {
                  <button onClick={() => setSelectedMatch(null)} className="absolute top-10 right-10 z-[6000] p-6 bg-white/5 rounded-full hover:bg-amber-500 hover:text-black transition-all hover:rotate-90"><X className="w-10 h-10" /></button>
                  <div className="flex items-center gap-6 mb-16 opacity-30 select-none"><div className="w-1.5 h-16 bg-amber-500 rounded-full" /><span className="text-[12px] font-black italic tracking-[20px] uppercase">Nexus Node Analyst</span></div>
                  <div className="flex flex-col lg:flex-row gap-16 items-stretch">
-                    {[1, 2].map(num => {
-                     const p = `player${num}`;
-                     const playerImage = selectedMatch[`${p}Image` as keyof Match];
-                     const playerFlag = selectedMatch[`${p}Flag` as keyof Match];
-                     const playerName = selectedMatch[`${p}Name` as keyof Match];
-                     const playerScore = selectedMatch[`${p}Score` as keyof Match];
                     
-                       return (
-                          <div key={num} className="flex-1 flex flex-col items-center text-center group">
-                             <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all duration-1000 shadow-3xl">
-                               {playerImage ? (
-                                 <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={playerImage} className="w-full h-full object-contain" />
-                               ) : (
-                                 <UserCircle className="w-24 h-24 opacity-5" />
-                               )}
-                             </div>
-                             <div className="flex items-center gap-6 mb-4">
-                               <span className="text-5xl drop-shadow-2xl">{playerFlag}</span>
-                               <h3 className="text-3xl font-black text-amber-500 uppercase italic truncate max-w-[250px]">{playerName || "—"}</h3>
-                             </div>
-                             <div className="text-8xl font-black text-white/30">{playerScore}</div>
-                          </div>
-                       )
-                    })}
+                    {/* Player 1 Card */}
+                    <div className="flex-1 flex flex-col items-center text-center group">
+                       <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all duration-1000 shadow-3xl">
+                         {selectedMatch.player1Image ? (
+                           <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={selectedMatch.player1Image} className="w-full h-full object-contain" />
+                         ) : (
+                           <UserCircle className="w-24 h-24 opacity-5" />
+                         )}
+                       </div>
+                       <div className="flex items-center gap-6 mb-4">
+                         <span className="text-5xl drop-shadow-2xl">{selectedMatch.player1Flag}</span>
+                         <h3 className="text-3xl font-black text-amber-500 uppercase italic truncate max-w-[250px]">{selectedMatch.player1Name || "—"}</h3>
+                       </div>
+                       <div className="text-8xl font-black text-white/30">{selectedMatch.player1Score}</div>
+                    </div>
+
+                    {/* Player 2 Card */}
+                    <div className="flex-1 flex flex-col items-center text-center group">
+                       <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all duration-1000 shadow-3xl">
+                         {selectedMatch.player2Image ? (
+                           <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={selectedMatch.player2Image} className="w-full h-full object-contain" />
+                         ) : (
+                           <UserCircle className="w-24 h-24 opacity-5" />
+                         )}
+                       </div>
+                       <div className="flex items-center gap-6 mb-4">
+                         <span className="text-5xl drop-shadow-2xl">{selectedMatch.player2Flag}</span>
+                         <h3 className="text-3xl font-black text-amber-500 uppercase italic truncate max-w-[250px]">{selectedMatch.player2Name || "—"}</h3>
+                       </div>
+                       <div className="text-8xl font-black text-white/30">{selectedMatch.player2Score}</div>
+                    </div>
+
                  </div>
               </motion.div>
            </div>
@@ -262,6 +268,11 @@ function MatchNode({ id, label, side, onClick, matches, variant = "default" }: a
   const match = matches.find((m: any) => m.id.toLowerCase() === id.toLowerCase()) || { player1Name: "", player2Name: "", player1Score: 0, player1Flag: "🏳️", player2Flag: "🏳️" };
   const getIsWinner = (num: number) => num === 1 ? match.player1Score > match.player2Score : match.player2Score > match.player1Score;
 
+  const win1 = getIsWinner(1);
+  const win2 = getIsWinner(2);
+  const isEmpty1 = !match.player1Name;
+  const isEmpty2 = !match.player2Name;
+
   return (
     <motion.div 
       whileHover={{ y: -6, scale: 1.03 }}
@@ -272,21 +283,23 @@ function MatchNode({ id, label, side, onClick, matches, variant = "default" }: a
          <div className={`w-2 h-2 rounded-full ${match.status === 'live' ? 'bg-red-600 animate-pulse' : 'bg-white/20'}`} />
          <span className="text-[11px] font-black uppercase text-white tracking-[12px] italic">{label}</span>
       </div>
-      {[1, 2].map(num => {
-        const name = match[`player${num}Name` as keyof Match];
-        const score = match[`player${num}Score` as keyof Match];
-        const flag = match[`player${num}Flag` as keyof Match];
-        const win = getIsWinner(num);
-        const isEmpty = !name;
-        return (
-          <div key={num} className={`w-full h-12 relative rounded-[18px] border transition-all duration-500 flex items-center px-6 overflow-hidden ${variant === 'gold' ? 'bg-amber-500/5 border-amber-500/20' : 'bg-white/[0.04] border-white/5'} group-hover:border-amber-500/50 shadow-2xl`}>
-            {win && <div className="absolute inset-y-0 left-0 w-2 bg-amber-500" />}
-            <span className="text-2xl mr-6 shrink-0 transition-transform group-hover:scale-125 duration-500">{flag}</span>
-            <span className={`text-[12px] font-black uppercase tracking-widest flex-1 truncate ${isEmpty ? 'text-white/5 italic' : win ? 'text-amber-500' : 'text-white/70'}`}>{isEmpty ? "empty" : name}</span>
-            {!isEmpty && <span className="text-[18px] font-black text-white italic ml-4">{score}</span>}
-          </div>
-        )
-      })}
+
+      {/* Player 1 Row */}
+      <div className={`w-full h-12 relative rounded-[18px] border transition-all duration-500 flex items-center px-6 overflow-hidden ${variant === 'gold' ? 'bg-amber-500/5 border-amber-500/20' : 'bg-white/[0.04] border-white/5'} group-hover:border-amber-500/50 shadow-2xl`}>
+        {win1 && <div className="absolute inset-y-0 left-0 w-2 bg-amber-500" />}
+        <span className="text-2xl mr-6 shrink-0 transition-transform group-hover:scale-125 duration-500">{match.player1Flag}</span>
+        <span className={`text-[12px] font-black uppercase tracking-widest flex-1 truncate ${isEmpty1 ? 'text-white/5 italic' : win1 ? 'text-amber-500' : 'text-white/70'}`}>{isEmpty1 ? "empty" : match.player1Name}</span>
+        {!isEmpty1 && <span className="text-[18px] font-black text-white italic ml-4">{match.player1Score}</span>}
+      </div>
+
+      {/* Player 2 Row */}
+      <div className={`w-full h-12 relative rounded-[18px] border transition-all duration-500 flex items-center px-6 overflow-hidden ${variant === 'gold' ? 'bg-amber-500/5 border-amber-500/20' : 'bg-white/[0.04] border-white/5'} group-hover:border-amber-500/50 shadow-2xl`}>
+        {win2 && <div className="absolute inset-y-0 left-0 w-2 bg-amber-500" />}
+        <span className="text-2xl mr-6 shrink-0 transition-transform group-hover:scale-125 duration-500">{match.player2Flag}</span>
+        <span className={`text-[12px] font-black uppercase tracking-widest flex-1 truncate ${isEmpty2 ? 'text-white/5 italic' : win2 ? 'text-amber-500' : 'text-white/70'}`}>{isEmpty2 ? "empty" : match.player2Name}</span>
+        {!isEmpty2 && <span className="text-[18px] font-black text-white italic ml-4">{match.player2Score}</span>}
+      </div>
+
     </motion.div>
   );
 }
