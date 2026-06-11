@@ -47,7 +47,9 @@ export default function ArchivePage() {
                <span className="text-[10px] font-bold text-white/20 tracking-[10px] uppercase italic">Sanctuary of Champions</span>
             </div>
          </div>
-         <GoldLogo className="hidden md:block scale-110" />
+         <div className="hidden md:block scale-110">
+  <GoldLogo />
+</div>
       </header>
 
       {/* Content Grid */}
