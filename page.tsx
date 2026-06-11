@@ -200,7 +200,8 @@ export default function Home() {
                  <div className="flex flex-col lg:flex-row gap-16 items-stretch">
                     {[1, 2].map(num => {
                      const p = `player${num}`;
-                         // @ts-ignore
+                    
+                     // @ts-ignore
                        return (
                           <div key={num} className="flex-1 flex flex-col items-center text-center group">
                              <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all transition-transform duration-1000 shadow-3xl">{selectedMatch[`${p}Image`] ? <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={selectedMatch[`${p}Image`]} className="w-full h-full object-contain" /> : <UserCircle className="w-24 h-24 opacity-5" />}</div>
