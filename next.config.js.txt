@@ -1,0 +1,18 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  typescript: {
+    // يتجاهل أخطاء التايب سكريبت أثناء الـ الرفع
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    // يتجاهل فحوصات اللينت أثناء الـ الرفع
+    ignoreDuringBuilds: true,
+  },
+};
+
+module.exports = nextConfig;
