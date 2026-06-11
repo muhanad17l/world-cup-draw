@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
@@ -24,6 +23,7 @@ interface Match {
   player1Score: number;
   player2Score: number;
   status: string;
+  [key: string]: any; // تتيح لـ TypeScript قراءة الخصائص بشكل ديناميكي بأمان
 }
 
 export default function Home() {
@@ -200,13 +200,25 @@ export default function Home() {
                  <div className="flex flex-col lg:flex-row gap-16 items-stretch">
                     {[1, 2].map(num => {
                      const p = `player${num}`;
+                     const playerImage = selectedMatch[`${p}Image` as keyof Match];
+                     const playerFlag = selectedMatch[`${p}Flag` as keyof Match];
+                     const playerName = selectedMatch[`${p}Name` as keyof Match];
+                     const playerScore = selectedMatch[`${p}Score` as keyof Match];
                     
-                     // @ts-ignore
                        return (
                           <div key={num} className="flex-1 flex flex-col items-center text-center group">
-                             <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all transition-transform duration-1000 shadow-3xl">{selectedMatch[`${p}Image`] ? <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={selectedMatch[`${p}Image`]} className="w-full h-full object-contain" /> : <UserCircle className="w-24 h-24 opacity-5" />}</div>
-                             <div className="flex items-center gap-6 mb-4"><span className="text-5xl drop-shadow-2xl">{selectedMatch[`${p}Flag`]}</span><h3 className="text-3xl font-black text-amber-500 uppercase italic truncate max-w-[250px]">{selectedMatch[`${p}Name`] || "—"}</h3></div>
-                             <div className="text-8xl font-black text-white/30">{selectedMatch[`${p}Score`]}</div>
+                             <div className="w-full h-[40vh] bg-neutral-950 rounded-[50px] p-4 border border-white/5 flex items-center justify-center mb-10 overflow-hidden group-hover:border-amber-500/50 transition-all duration-1000 shadow-3xl">
+                               {playerImage ? (
+                                 <motion.img initial={{ scale: 1.15 }} animate={{ scale: 1 }} src={playerImage} className="w-full h-full object-contain" />
+                               ) : (
+                                 <UserCircle className="w-24 h-24 opacity-5" />
+                               )}
+                             </div>
+                             <div className="flex items-center gap-6 mb-4">
+                               <span className="text-5xl drop-shadow-2xl">{playerFlag}</span>
+                               <h3 className="text-3xl font-black text-amber-500 uppercase italic truncate max-w-[250px]">{playerName || "—"}</h3>
+                             </div>
+                             <div className="text-8xl font-black text-white/30">{playerScore}</div>
                           </div>
                        )
                     })}
